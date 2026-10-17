@@ -1,0 +1,20 @@
+name: Maven test
+on:
+- workflow_dispatch
+permissions:
+  contents: read
+
+jobs:
+  mvn_verify:
+    runs-on:
+    - self-hosted
+    - optcd
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Maven Central Repository
+      uses: actions/setup-java@v3
+      with:
+        java-version: '8'
+        distribution: 'temurin'
+    - name: Run the Maven verify phase
+      run: mvn --batch-mode --update-snapshots test
