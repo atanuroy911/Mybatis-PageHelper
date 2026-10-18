@@ -1,0 +1,22 @@
+name: optcd-time-B
+on:
+- workflow_dispatch
+permissions:
+  contents: read
+
+jobs:
+  mvn_verify:
+    runs-on:
+    - self-hosted
+    - optcd
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Maven Central Repository
+      uses: actions/setup-java@v3
+      with:
+        java-version: '8'
+        distribution: 'temurin'
+    - name: 'mvn: go-offline (untimed)'
+      run: mvn -B -q dependency:go-offline || true
+    - name: 'mvn: Run the Maven verify phase'
+      run: mvn --batch-mode --update-snapshots test -DdisableXmlReport=true -Dmaven.compiler.useIncrementalCompilation=false

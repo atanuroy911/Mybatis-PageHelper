@@ -1,0 +1,20 @@
+name: optcd-github-C
+on:
+- workflow_dispatch
+permissions:
+  contents: read
+
+jobs:
+  mvn_verify:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Maven Central Repository
+      uses: actions/setup-java@v3
+      with:
+        java-version: '8'
+        distribution: 'temurin'
+    - name: 'mvn: go-offline (untimed)'
+      run: mvn -B -q dependency:go-offline || true
+    - name: 'mvn: Run the Maven verify phase'
+      run: mvn --batch-mode --update-snapshots test -DdisableXmlReport=true
